@@ -1194,174 +1194,188 @@ const jokes = [
 
 let waitingForLocation = false;
 
+// (Make sure these exist somewhere above if not already)
+let jokeIndex = 0;
+
+const jokes = [
+    "Why did the computer go to the doctor? Because it had a virus!",
+    "Why don't programmers like nature? It has too many bugs.",
+    "Why was the math book sad? Because it had too many problems.",
+    "What do you call a bear with no teeth? A gummy bear.",
+    "Why was the computer cold? It forgot to close its Windows."
+];
+
 function sendMessage(){
 
+    const input = document.getElementById("userInput");
+    const chatBox = document.getElementById("chatBox");
+    const text = input.value.trim();
 
-const input=document.getElementById("userInput");
+    if(text === "") return;
 
-const chatBox=document.getElementById("chatBox");
+    // user message
+    let user = document.createElement("div");
+    user.className = "message user-msg";
+    user.innerText = "You: " + text;
+    chatBox.appendChild(user);
 
-const text=input.value.trim();
+    input.value = "";
 
+    let lower = text.toLowerCase();
 
-if(text==="") return;
+    // ⭐ WEATHER STEP (MUST RUN FIRST)
+    if(waitingForLocation){
 
+        waitingForLocation = false;
 
+        let city = text.trim();
 
-let user=document.createElement("div");
+        fetch("https://wttr.in/" + encodeURIComponent(city) + "?format=3")
+        .then(response => response.text())
+        .then(data => {
 
-user.className="message user-msg";
+            let bot = document.createElement("div");
+            bot.className = "message bot-msg";
+            bot.innerText = "Bot: " + data;
 
-user.innerText="You: "+text;
+            chatBox.appendChild(bot);
+            chatBox.scrollTop = chatBox.scrollHeight;
 
+        })
+        .catch(() => {
 
-chatBox.appendChild(user);
+            let bot = document.createElement("div");
+            bot.className = "message bot-msg";
+            bot.innerText = "Bot: Sorry, weather not available.";
 
+            chatBox.appendChild(bot);
 
-input.value="";
+        });
 
+        return;
+    }
 
+    let reply = "Bot: Sorry, I don't understand that yet.";
 
-let reply="Bot: Sorry, I don't understand that yet.";
+    if(lower.includes("hello") || lower.includes("hi")){
 
-let lower=text.toLowerCase();
-if(waitingForLocation){
-
-    waitingForLocation = false;
-
-    fetch("https://wttr.in/" + encodeURIComponent(text) + "?format=3")
-    .then(response => response.text())
-    .then(data => {
-
-        let bot = document.createElement("div");
-
-        bot.className = "message bot-msg";
-
-        bot.innerText = "Bot: " + data;
-
-        chatBox.appendChild(bot);
-
-        chatBox.scrollTop = chatBox.scrollHeight;
-
-    })
-    .catch(() => {
-
-        let bot = document.createElement("div");
-
-        bot.className = "message bot-msg";
-
-        bot.innerText = "Bot: Sorry, I couldn't get the weather information.";
-
-        chatBox.appendChild(bot);
-
-    });
-
-    return;
-}
-
-
-if(lower.includes("hello") || lower.includes("hi")){
-
-    reply = "Bot: Hello! How can I help you today?";
-
-}
-
-else if(lower.includes("weather")){
-
-    waitingForLocation = true;
-
-    reply = "Bot: Which state or city do you live in?";
-
-}
-
-else if(lower.includes("what are you doing")){
-
-    reply = "Bot: I am just chatting with you and keeping myself upgraded.";
-
-}
-
-else if(
-    lower.includes("today date") ||
-    lower.includes("today's date") ||
-    lower.includes("date today")
-){
-
-    reply = "Bot: Today's date is " + new Date().toLocaleDateString();
-
-}
-
-else if(lower.includes("how are you")){
-
-    reply = "Bot: I am fine, thank you! Ready to chat with you.";
-
-}
-
-else if(lower.includes("i am happy")){
-
-    reply = "Bot: That's wonderful! Keep smiling and enjoy your day.";
-
-}
-
-else if(lower.includes("i am sad") || lower.includes("sad")){
-
-    reply = "Bot: I'm sorry you're feeling sad. I hope things get better soon.";
-
-}
-
-else if(lower.includes("i am good")){
-
-    reply = "Bot: Great to hear that!";
-
-}
-
-else if(lower.includes("not good")){
-
-    reply = "Bot: I hope your day improves soon.";
-
-}
-
-else if(lower.includes("help")){
-
-    reply = "Bot: I can help with hello, hi, time, date, joke, name, thank you, and a few other simple triggers.";
-
-}
-
-else if(lower.includes("thank you")){
-
-    reply = "Bot: You're welcome! Feel free to chat more.";
-
-}
-
-else if(lower.includes("time")){
-
-    reply = "Bot: Current time is " + new Date().toLocaleTimeString();
-
-}
-
-else if(lower.includes("name")){
-
-    reply = "Bot: I am a simple chatbot. My name is Friday.";
-
-}
-
-else if(lower.includes("joke")){
-
-    reply = "Bot: " + jokes[jokeIndex];
-
-    jokeIndex++;
-
-    if(jokeIndex >= jokes.length){
-
-        jokeIndex = 0;
+        reply = "Bot: Hello! How can I help you today?";
 
     }
 
+    else if(lower.includes("weather")){
+
+        waitingForLocation = true;
+
+        reply = "Bot: Please type your city or state (example: Jaipur, Delhi, Mumbai)";
+
+    }
+
+    else if(lower.includes("what are you doing")){
+
+        reply = "Bot: I am just chatting with you and keeping myself upgraded.";
+
+    }
+
+    else if(
+        lower.includes("today date") ||
+        lower.includes("today's date") ||
+        lower.includes("date today")
+    ){
+
+        reply = "Bot: Today's date is " + new Date().toLocaleDateString();
+
+    }
+
+    else if(lower.includes("how are you")){
+
+        reply = "Bot: I am fine, thank you! Ready to chat with you.";
+
+    }
+
+    else if(lower.includes("i am happy")){
+
+        reply = "Bot: That's wonderful! Keep smiling and enjoy your day.";
+
+    }
+
+    else if(lower.includes("i am sad") || lower.includes("sad")){
+
+        reply = "Bot: I'm sorry you're feeling sad. I hope things get better soon.";
+
+    }
+
+    else if(lower.includes("i am good")){
+
+        reply = "Bot: Great to hear that!";
+
+    }
+
+    else if(lower.includes("not good")){
+
+        reply = "Bot: I hope your day improves soon.";
+
+    }
+
+    else if(lower.includes("help")){
+
+        reply = "Bot: I can help with hello, hi, weather, time, date, joke, name, thank you.";
+
+    }
+
+    else if(lower.includes("thank you")){
+
+        reply = "Bot: You're welcome! Feel free to chat more.";
+
+    }
+
+    else if(lower.includes("time")){
+
+        reply = "Bot: Current time is " + new Date().toLocaleTimeString();
+
+    }
+
+    else if(lower.includes("name")){
+
+        reply = "Bot: I am a simple chatbot. My name is Friday.";
+
+    }
+
+    else if(lower.includes("joke")){
+
+        reply = "Bot: " + jokes[jokeIndex];
+
+        jokeIndex++;
+
+        if(jokeIndex >= jokes.length){
+            jokeIndex = 0;
+        }
+
+    }
+
+    else if(lower.includes("bye")){
+
+        reply = "Bot: Goodbye! Have a wonderful day!";
+
+    }
+
+    // show normal reply
+    setTimeout(() => {
+
+        let bot = document.createElement("div");
+        bot.className = "message bot-msg";
+        bot.innerText = reply;
+
+        chatBox.appendChild(bot);
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+    }, 300);
 }
 
-else if(lower.includes("bye")){
-
-    reply = "Bot: Goodbye! Have a wonderful day!";
-
+function handleKeyPress(event){
+    if(event.key === "Enter"){
+        sendMessage();
+    }
 }
 setTimeout(()=>{
 
