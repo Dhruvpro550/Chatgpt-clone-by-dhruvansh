@@ -1194,17 +1194,6 @@ const jokes = [
 
 let waitingForLocation = false;
 
-// (Make sure these exist somewhere above if not already)
-let jokeIndex = 0;
-
-const jokes = [
-    "Why did the computer go to the doctor? Because it had a virus!",
-    "Why don't programmers like nature? It has too many bugs.",
-    "Why was the math book sad? Because it had too many problems.",
-    "What do you call a bear with no teeth? A gummy bear.",
-    "Why was the computer cold? It forgot to close its Windows."
-];
-
 function sendMessage(){
 
     const input = document.getElementById("userInput");
@@ -1213,7 +1202,7 @@ function sendMessage(){
 
     if(text === "") return;
 
-    // user message
+    
     let user = document.createElement("div");
     user.className = "message user-msg";
     user.innerText = "You: " + text;
@@ -1223,38 +1212,36 @@ function sendMessage(){
 
     let lower = text.toLowerCase();
 
-    // ⭐ WEATHER STEP (MUST RUN FIRST)
     if(waitingForLocation){
 
-        waitingForLocation = false;
+    waitingForLocation = false;
 
-        let city = text.trim();
+    let city = text.trim();
 
-        fetch("https://wttr.in/" + encodeURIComponent(city) + "?format=3")
-        .then(response => response.text())
-        .then(data => {
+    fetch("https://wttr.in/" + encodeURIComponent(city) + "?format=3")
+    .then(response => response.text())
+    .then(data => {
 
-            let bot = document.createElement("div");
-            bot.className = "message bot-msg";
-            bot.innerText = "Bot: " + data;
+        let bot = document.createElement("div");
+        bot.className = "message bot-msg";
+        bot.innerText = "Bot: " + data;
 
-            chatBox.appendChild(bot);
-            chatBox.scrollTop = chatBox.scrollHeight;
+        chatBox.appendChild(bot);
+        chatBox.scrollTop = chatBox.scrollHeight;
 
-        })
-        .catch(() => {
+    })
+    .catch(() => {
 
-            let bot = document.createElement("div");
-            bot.className = "message bot-msg";
-            bot.innerText = "Bot: Sorry, weather not available.";
+        let bot = document.createElement("div");
+        bot.className = "message bot-msg";
+        bot.innerText = "Bot: Sorry, weather not available.";
 
-            chatBox.appendChild(bot);
+        chatBox.appendChild(bot);
 
-        });
+    });
 
-        return;
-    }
-
+    return; 
+}
     let reply = "Bot: Sorry, I don't understand that yet.";
 
     if(lower.includes("hello") || lower.includes("hi")){
@@ -1360,27 +1347,16 @@ function sendMessage(){
     }
 setTimeout(()=>{
 
+    if(!reply) return;
 
-let bot=document.createElement("div");
+    let bot=document.createElement("div");
+    bot.className="message bot-msg";
+    bot.innerText=reply;
 
-
-bot.className="message bot-msg";
-
-
-bot.innerText=reply;
-
-
-chatBox.appendChild(bot);
-
-
-chatBox.scrollTop=chatBox.scrollHeight;
-
+    chatBox.appendChild(bot);
+    chatBox.scrollTop=chatBox.scrollHeight;
 
 },300);
-
-
-
-}
 
 
 
