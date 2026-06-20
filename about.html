@@ -1358,25 +1358,6 @@ function sendMessage(){
         reply = "Bot: Goodbye! Have a wonderful day!";
 
     }
-
-    // show normal reply
-    setTimeout(() => {
-
-        let bot = document.createElement("div");
-        bot.className = "message bot-msg";
-        bot.innerText = reply;
-
-        chatBox.appendChild(bot);
-        chatBox.scrollTop = chatBox.scrollHeight;
-
-    }, 300);
-}
-
-function handleKeyPress(event){
-    if(event.key === "Enter"){
-        sendMessage();
-    }
-}
 setTimeout(()=>{
 
 
